@@ -45,21 +45,42 @@ table.addEventListener('click', function (e) {
   }
 });
 
-function updateCart() {
-  const cartItems = document.getElementById('cartItems');
-  const totalDiv = document.getElementById('total');
-  cartItems.innerHTML = '';
-  let total = 0;
-  for (const id in cart) {
-    if (cart[id] > 0) {
-      const product = Products.find(p => p.id == id);
-      console.log(product)
-      const div = document.createElement('div');
-      div.classList.add('cart-item');
-      div.innerText = `${product.name} = ${cart[id]} * ${product.price} = ${cart[id] * product.price}`;
-      cartItems.appendChild(div);
-      total += cart[id] * product.price;
+// Initial setup
+document.addEventListener('DOMContentLoaded', function () {
+    updateCart();
+  });
+  
+  function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    const totalDiv = document.getElementById('total');
+    const noProductDiv = document.createElement('div');
+    
+
+    cartItems.innerHTML = '';
+    
+    let total = 0;
+    let hasProducts = false; 
+    
+    for (const id in cart) {
+      if (cart[id] > 0) {
+        hasProducts = true; 
+        
+        const product = Products.find(p => p.id == id);
+        
+        const div = document.createElement('div');
+        div.classList.add('cart-item');
+        div.innerText = `${product.name} = ${cart[id]} * ${product.price} = ${cart[id] * product.price}`;
+        cartItems.appendChild(div);
+        
+        total += cart[id] * product.price;
+      }
     }
+
+    if (!hasProducts) {
+      noProductDiv.innerText = 'No Product added to the cart';
+      cartItems.appendChild(noProductDiv);
+    }
+    
+    totalDiv.innerText = `Total: ${total}`;
   }
-  totalDiv.innerText = `Total: ${total}`;
-}
+  
